@@ -37,15 +37,6 @@ module {
     };
   };
 
-  // Claim admin role -- only works if no admin has been assigned yet
-  public func claimFirstAdmin(state : AccessControlState, caller : Principal) : Bool {
-    if (caller.isAnonymous()) { return false };
-    if (state.adminAssigned) { return false };
-    state.userRoles.add(caller, #admin);
-    state.adminAssigned := true;
-    true;
-  };
-
   public func getUserRole(state : AccessControlState, caller : Principal) : UserRole {
     if (caller.isAnonymous()) { return #guest };
     switch (state.userRoles.get(caller)) {
@@ -72,18 +63,5 @@ module {
 
   public func isAdmin(state : AccessControlState, caller : Principal) : Bool {
     getUserRole(state, caller) == #admin;
-  };
-
-  // Safe version -- returns false instead of trapping for unregistered users
-  public func isAdminSafe(state : AccessControlState, caller : Principal) : Bool {
-    if (caller.isAnonymous()) { return false };
-    switch (state.userRoles.get(caller)) {
-      case (?#admin) { true };
-      case (_) { false };
-    };
-  };
-
-  public func isAdminAssigned(state : AccessControlState) : Bool {
-    state.adminAssigned;
   };
 };

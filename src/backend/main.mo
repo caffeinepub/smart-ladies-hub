@@ -11,9 +11,7 @@ import MixinStorage "blob-storage/Mixin";
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 
-
-
-persistent actor {
+actor {
   let accessControlState = AccessControl.initState();
   let products = Map.empty<Nat, Product>();
   let offers = Map.empty<Nat, Offer>();
@@ -71,17 +69,20 @@ persistent actor {
     name : Text;
   };
 
-  // Check if any admin has been assigned yet (for first-run setup)
   public query func isAdminAssigned() : async Bool {
-    AccessControl.isAdminAssigned(accessControlState);
+    accessControlState.adminAssigned;
   };
 
-  // Claim admin -- only works if no admin has been assigned yet
   public shared ({ caller }) func claimFirstAdmin() : async Bool {
     if (caller.isAnonymous()) {
       Runtime.trap("Must be logged in to claim admin");
     };
-    AccessControl.claimFirstAdmin(accessControlState, caller);
+    if (accessControlState.adminAssigned) {
+      return false;
+    };
+    accessControlState.userRoles.add(caller, #admin);
+    accessControlState.adminAssigned := true;
+    true;
   };
 
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
@@ -171,7 +172,6 @@ persistent actor {
 
   public query ({ caller }) func getActiveProducts() : async [Product] {
     let activeProductsList = List.empty<Product>();
-
     for (product in products.values()) {
       if (product.isActive) {
         activeProductsList.add(product);
@@ -194,7 +194,6 @@ persistent actor {
   public query ({ caller }) func getStore() : async StoreDTO {
     let activeProducts = products.values().toArray().filter(func(p) { p.isActive });
     let activeOffers = offers.values().toArray().filter(func(o) { o.isActive });
-
     {
       announcement = storeConfig.announcement;
       whatsapp = storeConfig.whatsapp;
@@ -204,14 +203,12 @@ persistent actor {
   };
 
   public query ({ caller }) func getCategories() : async [Category] {
-    let categories = [#ladies, #accessories, #jewellery, #daily, #offer];
-    categories;
+    [#ladies, #accessories, #jewellery, #daily, #offer];
   };
 
   public query ({ caller }) func getStorePublicContent() : async StoreDTO {
     let activeProducts = products.values().toArray().filter(func(p) { p.isActive });
     let activeOffers = offers.values().toArray().filter(func(o) { o.isActive });
-
     {
       announcement = storeConfig.announcement;
       whatsapp = storeConfig.whatsapp;
@@ -222,7 +219,6 @@ persistent actor {
 
   public query ({ caller }) func getProductsByCategory(category : Category) : async [Product] {
     let filteredProductsList = List.empty<Product>();
-
     for (product in products.values()) {
       if (product.category == category and product.isActive) {
         filteredProductsList.add(product);

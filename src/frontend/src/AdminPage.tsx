@@ -116,6 +116,14 @@ export default function AdminPage() {
 
   const isLoggedIn = !!identity;
 
+  // Prevent pull-to-refresh on mobile browsers
+  useEffect(() => {
+    document.body.style.overscrollBehavior = "none";
+    return () => {
+      document.body.style.overscrollBehavior = "";
+    };
+  }, []);
+
   // Check admin status when actor is ready and user is logged in
   useEffect(() => {
     if (!actor || !isLoggedIn || isFetching) return;
@@ -223,7 +231,9 @@ export default function AdminPage() {
       const bytes = new Uint8Array(await file.arrayBuffer());
       // Dynamic import to avoid static type errors - @icp-sdk/blob-storage installed at runtime
       // eslint-disable-next-line
-      const mod = (await import("@icp-sdk/blob-storage" as string)) as any;
+      const bsUrl = "@icp-sdk/blob-storage";
+      // eslint-disable-next-line
+      const mod = (await import(/* @vite-ignore */ bsUrl)) as any;
       const externalBlob = mod.ExternalBlob.fromBytes(bytes).withUploadProgress(
         (pct: number) => setUploadProgress(Math.round(pct)),
       );
