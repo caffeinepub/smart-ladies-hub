@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Playfair Display";
+  src: url("/assets/fonts/PlayfairDisplay.woff2") format("woff2");
+  font-display: swap;
+  font-weight: 400 800;
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/assets/fonts/PlusJakartaSans.woff2") format("woff2");
+  font-display: swap;
+  font-weight: 300 700;
+}
+
+@layer base {
+  :root {
+    --radius: 0.75rem;
+
+    /* Brand colors - OKLCH */
+    /* Maroon primary #4B0F1F */
+    --maroon: 0.255 0.115 15;
+    /* Maroon dark #3B0D18 */
+    --maroon-dark: 0.21 0.11 15;
+    /* Maroon mid #5A1224 */
+    --maroon-mid: 0.285 0.13 15;
+    /* Gold accent #C8A05A */
+    --gold: 0.72 0.1 78;
+    /* Gold bright #D6B25E */
+    --gold-bright: 0.75 0.11 78;
+    /* Cream background #F6F1E6 */
+    --cream: 0.965 0.018 85;
+    /* Beige section #EFE4D3 */
+    --beige: 0.93 0.026 75;
+    /* Ivory header #F6F1E6 */
+    --ivory: 0.96 0.016 85;
+    /* Dark text #1E1E1E */
+    --dark-text: 0.145 0 0;
+    /* Muted text #6B6B6B */
+    --muted-text: 0.5 0 0;
+    /* Footer #2F2F2F */
+    --footer-bg: 0.22 0 0;
+    /* WhatsApp green #25D366 */
+    --whatsapp: 0.72 0.18 155;
+
+    --background: 0.965 0.018 85;
+    --foreground: 0.145 0 0;
+    --card: 1 0 0;
+    --card-foreground: 0.145 0 0;
+    --popover: 1 0 0;
+    --popover-foreground: 0.145 0 0;
+    --primary: 0.255 0.115 15;
+    --primary-foreground: 0.985 0 0;
+    --secondary: 0.93 0.026 75;
+    --secondary-foreground: 0.145 0 0;
+    --muted: 0.93 0.026 75;
+    --muted-foreground: 0.5 0 0;
+    --accent: 0.72 0.1 78;
+    --accent-foreground: 0.145 0 0;
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+    --border: 0.88 0.02 75;
+    --input: 0.88 0.02 75;
+    --ring: 0.72 0.1 78;
+    --chart-1: 0.646 0.222 41.116;
+    --chart-2: 0.6 0.118 184.704;
+    --chart-3: 0.398 0.07 227.392;
+    --chart-4: 0.828 0.189 84.429;
+    --chart-5: 0.769 0.188 70.08;
+    --sidebar: 0.255 0.115 15;
+    --sidebar-foreground: 0.985 0 0;
+    --sidebar-primary: 0.72 0.1 78;
+    --sidebar-primary-foreground: 0.145 0 0;
+    --sidebar-accent: 0.285 0.13 15;
+    --sidebar-accent-foreground: 0.985 0 0;
+    --sidebar-border: 0.285 0.13 15;
+    --sidebar-ring: 0.72 0.1 78;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Plus Jakarta Sans", sans-serif;
+  }
+}
